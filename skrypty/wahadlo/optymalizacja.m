@@ -1,5 +1,3 @@
-% TODO zmienić dane
-
 function [beta, U] = optymalizacja()
     data = load('pomiar_wahadlo.mat');
     t_real = data.ScopeData.time;
