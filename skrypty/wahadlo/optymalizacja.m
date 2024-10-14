@@ -1,15 +1,21 @@
 function [beta, U] = optymalizacja()
-    data = load('pomiar_wahadlo.mat');
-    t_real = data.ScopeData.time;
-    x_real = data.ScopeData.signals(4).values;
-    
-    % Select time range
-    [t_real, x_real, f_sel] = trim_data(t_real, x_real);
-    clf;
-    stairs(t_real, x_real);
-    legend('Real Data'); xlabel('t [s]'); ylabel('x [rad]'); grid on
+    scriptPath = mfilename('fullpath');  % Pełna ścieżka do tego pliku skryptu
+    [scriptDir, ~, ~] = fileparts(scriptPath);  % Katalog skryptu
+    dataFolder = fullfile(scriptDir, '..');
+    dataFolder = fullfile(dataFolder, '..', 'data');
+    data = load(fullfile(dataFolder, 'wahadlo_swobodny_przebieg_2.mat'));
+%     t_real = pend_angle.time;
+%     x_real = pend_angle.signals.values;
+    t_real = data.x;
+    x_real = data.y;
+
+%     % Select time range
+%     [t_real, x_real, f_sel] = trim_data(t_real, x_real);
+%     clf;
+%     stairs(t_real, x_real);
+%     legend('Real Data'); xlabel('t [s]'); ylabel('x [rad]'); grid on
     x0 = [x_real(1), 0];
-    fprintf("Warunek początkowy %g\n", x0)
+%     fprintf("Warunek początkowy %g\n", x0)
     
     % Optimize
     params = optimize_model(t_real, x_real, x0);
@@ -21,15 +27,12 @@ function [beta, U] = optymalizacja()
     legend('Real', 'Model'); title('Model wahadła po optymalizacji')
     
     % Compare
-    data = load('weryfikacja_wahadlo.mat');
-    t_real = data.ScopeData.time;
-    x_real = data.ScopeData.signals(4).values;
-    figure(f_sel);
-    [t_real, x_real, f_sel] = trim_data(t_real, x_real);
-    figure(f_sel);
-    clf;
-    stairs(t_real, x_real);
-    legend('Real Data'); xlabel('t [s]'); ylabel('x [rad]'); grid on
+    data = load(fullfile(dataFolder, 'wahadlo_swobodny_przebieg_1.mat'));
+%     t_real = pend_angle.time;
+%     x_real = pend_angle.signals.values;
+    t_real = data.x;
+    x_real = data.y;
+
     x0 = [x_real(1), 0];
     figure(f_optim)
     subplot(2, 1, 2)

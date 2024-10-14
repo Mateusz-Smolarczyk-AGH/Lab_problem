@@ -1,30 +1,30 @@
 clear all; close all;
-cd('../wiatrak/')
-[K, tau] = optymalizacja();
-cd('../sila_ciagu/')
-[p1, mu1] = optymalizacja();
-cd('../wahadlo/')   
+cd('../wachadlo/')
+[I, U, g, beta] = compute_parameters();
 [beta, U] = optymalizacja();
-cd('../kompletny_model/')
+cd('../kolo_zamachowe/')
+[K, tau] = optymalizacja();
+cd('..')
 
 %% 
-addpath('../wiatrak/')
-addpath('../sila_ciagu/')
-addpath('../wahadlo/')
+scriptPath = mfilename('fullpath');  % Pełna ścieżka do tego pliku skryptu
+[scriptDir, ~, ~] = fileparts(scriptPath);  % Katalog skryptu
+dataFolder = fullfile(scriptDir, '..');
+dataFolder = fullfile(dataFolder, '..', 'raw_data');
+data = load(fullfile(dataFolder, 'motor_raw_with_pendulum_5.mat'));
 
-data = load('weryfikacja_calosc3.mat');
-t_real = data.ScopeData.time;
-x_real = data.ScopeData.signals(4).values;
-w_real = data.ScopeData.signals(5).values;
-u = data.ScopeData.signals(7).values;
+t_real = data.motor_vel.time(3:end) - 0.02;
+x_real = data.pend_angle.signals.values(3:end);
+w_real = data.motor_vel.signals(1).values(3:end);
+u = data.motor_vel.signals(2).values(3:end);
 u_sim.time = t_real;
 u_sim.signals.values = u;
 u_sim.signals.dimensions = 1;
-params = [beta, U, K, tau, p1, mu1'];
+params = [beta, U, K, tau];
 
-x0 = [x_real(1); 0; w_real(1)];
+x0 = [x_real(1); 0; w_real(1); 0];
 [t, x] = ode45(@(t, x) model(t, x, u(1+int16(100*t)), params), t_real, x0);
-figure('Name', 'Ostateczny model helikoptera', 'Position', [50 50 800 900]);
+figure('Name', 'Ostateczny model wachadla', 'Position', [50 50 800 900]);
 subplot(3, 1, 1)
 stairs(t_real, x_real); hold on
 stairs(t, x(:, 1));
@@ -32,7 +32,7 @@ legend('Real', 'Model'); title('Wychylenie wahadła')
 subplot(3, 1, 2)
 stairs(t_real, data.ScopeData.signals(5).values); hold on
 stairs(t, x(:, 3))
-legend('Real', 'Model'); title('Prędkość obrotowa wiatraka')
+legend('Real', 'Model'); title('Prędkość obrotowa koła')
 subplot(3, 1, 3)
 stairs(t_real, u); title('Sygnał sterujący')
 
