@@ -1,29 +1,95 @@
 clear all; close all;
-cd('../wachadlo/')
+cd('./wahadlo/')
 [I, U, g, beta] = compute_parameters();
 [beta, U] = optymalizacja();
 cd('../kolo_zamachowe/')
 [K, tau] = optymalizacja();
-cd('..')
 
 %% 
-scriptPath = mfilename('fullpath');  % Pełna ścieżka do tego pliku skryptu
-[scriptDir, ~, ~] = fileparts(scriptPath);  % Katalog skryptu
-dataFolder = fullfile(scriptDir, '..');
-dataFolder = fullfile(dataFolder, '..', 'raw_data');
-data = load(fullfile(dataFolder, 'motor_raw_with_pendulum_5.mat'));
+% scriptPath = mfilename('fullpath');  % Pełna ścieżka do tego pliku skryptu
+% [scriptDir, ~, ~] = fileparts(scriptPath);  % Katalog skryptu
+% dataFolder = fullfile(dataFolder, '..', 'raw_data');
+% data = load(fullfile(dataFolder, 'motor_raw_with_pendulum_5.mat'));
 
-t_real = data.motor_vel.time(3:end) - 0.02;
-x_real = data.pend_angle.signals.values(3:end);
-w_real = data.motor_vel.signals(1).values(3:end);
-u = data.motor_vel.signals(2).values(3:end);
+t_real = motor_vel.time(3:end) - 0.02;
+x_real = pend_angle.signals.values(3:end);
+w_real = motor_vel.signals(1).values(3:end);
+u = motor_vel.signals(2).values(3:end);
 u_sim.time = t_real;
 u_sim.signals.values = u;
 u_sim.signals.dimensions = 1;
 params = [beta, U, K, tau];
 
-x0 = [x_real(1); 0; w_real(1); 0];
-[t, x] = ode45(@(t, x) model(t, x, u(1+int16(100*t)), params), t_real, x0);
+
+%% 
+% Uruchom symulację modelu
+simOut = sim('model_testslx.slx');
+y1 = simOut.simout1.signals.values(:,1);   % Wyjście 1
+
+% Wykres wyjścia 1
+subplot(5,1,1);
+plot(t, y1);
+xlabel('Czas (s)');
+ylabel('Wyjście 1');
+title('Wykres wyjścia 1');
+grid on;
+%% 
+
+% Zakładam, że dane wyjściowe są w postaci struktury 'simOut' i zawierają sygnały
+% np. jeśli mamy sygnał zapisany w To Workspace jako 'simout1', 'simout2', 'simout3', 'simout4' oraz 'control':
+t = simOut.tout;      % Czas symulacji
+y1 = simOut.simout.signals.values(:,1);   % Wyjście 1
+y2 = simOut.simout.signals.values(:,2);   % Wyjście 2
+y3 = simOut.simout.signals.values(:,3);   % Wyjście 3
+y4 = simOut.simout.signals.values(:,4);   % Wyjście 4
+
+% Stwórz figurę z 5 wykresami
+figure;
+
+% Wykres wyjścia 1
+subplot(5,1,1);
+plot(t, y1);
+xlabel('Czas (s)');
+ylabel('Wyjście 1');
+title('Wykres wyjścia 1');
+grid on;
+
+% Wykres wyjścia 2
+subplot(5,1,2);
+plot(t, y2);
+xlabel('Czas (s)');
+ylabel('Wyjście 2');
+title('Wykres wyjścia 2');
+grid on;
+
+% Wykres wyjścia 3
+subplot(5,1,3);
+plot(t, y3);
+xlabel('Czas (s)');
+ylabel('Wyjście 3');
+title('Wykres wyjścia 3');
+grid on;
+
+% Wykres wyjścia 4
+subplot(5,1,4);
+plot(t, y4);
+xlabel('Czas (s)');
+ylabel('Wyjście 4');
+title('Wykres wyjścia 4');
+grid on;
+
+% % Wykres sterowania
+% subplot(5,1,5);
+% plot(t, u_sim);
+% xlabel('Czas (s)');
+% ylabel('Sterowanie');
+% title('Wykres sterowania');
+% grid on;
+
+%% 
+
+% x0 = [x_real(1); 0; w_real(1); 0];
+% [t, x] = ode45(@(t, x) model(t, x, u(1+int16(100*t)), params), t_real, x0);
 figure('Name', 'Ostateczny model wachadla', 'Position', [50 50 800 900]);
 subplot(3, 1, 1)
 stairs(t_real, x_real); hold on

@@ -41,10 +41,10 @@ function [beta, U] = optymalizacja()
     stairs(t, x(:, 1)); hold off
     legend('Real', 'Model'); title('Weryfikacja modelu z innym przebiegiem')
     beta = params(1); U = params(2);
-    figure(f_sel);
-    stairs(t_real, x_real);
-    legend('Położenie wahadła'); xlabel('t [s]'); ylabel('x [rad]'); grid on
-    title('Przebieg położenia wahadła');
+%     figure(f_optim);
+%     stairs(t_real, x_real);
+%     legend('Położenie wahadła'); xlabel('t [s]'); ylabel('x [rad]'); grid on
+%     title('Przebieg położenia wahadła');
 end
 
 
