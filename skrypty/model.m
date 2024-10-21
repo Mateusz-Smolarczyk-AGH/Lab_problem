@@ -7,7 +7,7 @@ function dxdt = model(t, x, u, params)
     dx1 = x(2);
     dx2 =  (-g * U * sin(x(1)) - beta * x(2) - F * 0.178) / I;
     dx3 = (K * (211.6*u + 0.953) - x(3)) / tau;
-    dx4 = 
+    % dx4 = ???
     dxdt = [dx1; dx2; dx3; dx4];
 end
 
