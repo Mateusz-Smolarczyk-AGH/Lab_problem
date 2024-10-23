@@ -8,7 +8,7 @@ cd('../')
 
 %% 
 dataFolder = fullfile('..', 'raw_data');
-load(fullfile(dataFolder, 'motor_raw_with_pendulum_4.mat'));
+load(fullfile(dataFolder, 'motor_raw_with_pendulum_3.mat'));
 
 t_real = motor_vel.time(3:end) - 0.02;
 x_real = pend_angle.signals.values(3:end);
@@ -26,7 +26,7 @@ simTime = t_real(end);  % Czas symulacji w sekundach
 solverStep = 0.01;  % Krok symulacji 0.01 s
 
 % Uruchomienie symulacji z ustawieniem solvera na 'ode4' (fixed-step) i krokiem 0.01 s
-simOut = sim('model_testslx.slx', ...
+simOut = sim('model_testslx_2022a.slx', ...
     'StopTime', num2str(simTime), ...        % Czas symulacji
     'Solver', 'ode4', ...                    % Solver fixed-step
     'FixedStep', num2str(solverStep));       % Krok symulacji
@@ -44,9 +44,9 @@ figure;
 
 % Subplot 1: Porównanie sygnałów sterujących
 subplot(3, 1, 1);
-plot(t_real, u_real, 'b', 'LineWidth', 1.5); % Sygnał rzeczywisty
+plot(t_real, u_real, 'b', 'LineWidth', 1); % Sygnał rzeczywisty
 hold on;
-plot(t_sim, u_sim, 'r--', 'LineWidth', 1.5); % Sygnał symulacyjny
+plot(t_sim, u_sim, 'r--', 'LineWidth', 1); % Sygnał symulacyjny
 title('Sygnał sterujący');
 xlabel('Czas [s]');
 ylabel('Sterowanie');
@@ -56,9 +56,9 @@ hold off;
 
 % Subplot 2: Porównanie położenia wahadła
 subplot(3, 1, 2);
-plot(t_real, x_real, 'b', 'LineWidth', 1.5); % Sygnał rzeczywisty
+plot(t_real, x_real, 'b', 'LineWidth', 1); % Sygnał rzeczywisty
 hold on;
-plot(t_sim, pend_x_sim, 'r--', 'LineWidth', 1.5); % Sygnał symulacyjny
+plot(t_sim, pend_x_sim, 'r--', 'LineWidth', 1); % Sygnał symulacyjny
 title('Położenie wahadła');
 xlabel('Czas [s]');
 ylabel('Kąt [rad]');
@@ -67,11 +67,11 @@ grid on;
 hold off;
 
 % Subplot 3: Porównanie prędkości kątowej silnika
-subplot(3, 1, 3);
-plot(t_real, w_real, 'b', 'LineWidth', 1.5); % Sygnał rzeczywisty
+subplot(3, 1, 3);   
+plot(t_real, w_real, 'b', 'LineWidth', 1); % Sygnał rzeczywisty
 hold on;
-plot(t_sim, motor_w_sim, 'r--', 'LineWidth', 1.5); % Sygnał symulacyjny
-title('Prędkość kątowa wahadła');
+plot(t_sim, motor_w_sim, 'r', 'LineWidth', 1); % Sygnał symulacyjny
+title('Prędkość kątowa koła');
 xlabel('Czas [s]');
 ylabel('Prędkość kątowa [rad/s]');
 legend('Rzeczywisty', 'Symulacja');
@@ -79,8 +79,8 @@ grid on;
 hold off;
 
 %% 
-% xep = [deg2rad(-2*21.37) 0 2000];
-% uep = 0;
+ xep = [pi 0 0 0];
+ uep = 0;
 % solv = fsolve(@(x0)model(t, [xep(1) xep(2) x0(1)], x0(2), params), [xep(3); uep]);
 % xep(3) = solv(1);
 % uep = solv(2);
