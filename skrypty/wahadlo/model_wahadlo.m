@@ -8,7 +8,7 @@ function dxdt = model_wahadlo(t, x, F, params)
 
     % Równania ruchu wahadła
     dx1 = x(2);
-    dx2 = (-g * U * sin(x(1)) - beta * x(2) - F * 0.178) / I;
+    dx2 = (-g * U * sin(x(1)) - beta * x(2) - F) / I;
     
     % Zwróć pochodne stanu
     dxdt = [dx1; dx2];

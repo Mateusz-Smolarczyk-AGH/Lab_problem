@@ -8,7 +8,7 @@ cd('../')
 
 %% 
 dataFolder = fullfile('..', 'raw_data');
-load(fullfile(dataFolder, 'motor_raw_with_pendulum_3.mat'));
+load(fullfile(dataFolder, 'motor_raw_with_pendulum_4.mat'));
 
 t_real = motor_vel.time(3:end) - 0.02;
 x_real = pend_angle.signals.values(3:end);
@@ -26,7 +26,7 @@ simTime = t_real(end);  % Czas symulacji w sekundach
 solverStep = 0.01;  % Krok symulacji 0.01 s
 
 % Uruchomienie symulacji z ustawieniem solvera na 'ode4' (fixed-step) i krokiem 0.01 s
-simOut = sim('model_testslx_2022a.slx', ...
+simOut = sim('model_testslx_2015a.slx', ...
     'StopTime', num2str(simTime), ...        % Czas symulacji
     'Solver', 'ode4', ...                    % Solver fixed-step
     'FixedStep', num2str(solverStep));       % Krok symulacji
@@ -90,15 +90,24 @@ hold off;
 % p2 = [2.056467854285133e+02,-5.208575031241387,-1.043284835310092e+03,43.401332957404660,3.454345824430912e+03,1.802723922744937];
 % mu2 = [0;0.636602825861413];
 % %% 
-% A = [0 1 0;
-%    -4.022 -0.1859 -0.002412;
-%    0 0 -1.891];
-% 
-%   B = [0; 0; 1.068e+04];
-%  R = 1;
-%  Q = [50000 0 0;
-%      0 1000 0;
-%      0 0 0.01];
-% K_lqr = lqr(A,B,Q,R);
+A = [0 1 0 0;
+   12.34 -1.173 -10.29 1.029e+04;
+   0 0 -1.004 0;
+   0 0 1 -1000];
+
+ B = [0; 0; 214.4; 0];
+ C = [1 0 0 0;
+   0 1 0 0;
+   0 0 1 0;
+   0 0 1000 -1e+06];
+
+ D = [0; 0; 0; 0];
+ 
+ R = 1;
+ Q = [500 0 0 0;
+     0 10 0 0;
+     0 0 0.1 0;
+     0 0 0 0.01];
+K_lqr = lqr(A,B,Q,R);
 % %% 
 

@@ -5,7 +5,7 @@ function [beta, U] = optymalizacja()
     dataFolder = fullfile(scriptDir, '..', '..', 'data');
 
     % Załaduj dane rzeczywiste (przebieg 2)
-    data = load(fullfile(dataFolder, 'wahadlo_swobodny_przebieg_1.mat'));
+    data = load(fullfile(dataFolder, 'wahadlo_swobodny_przebieg_2.mat'));
     t_real = data.x;
     x_real = data.y;
     
@@ -25,7 +25,7 @@ function [beta, U] = optymalizacja()
     title('Model wahadła po optymalizacji');
     
     % Weryfikacja modelu na innych danych (przebieg 1)
-    data = load(fullfile(dataFolder, 'wahadlo_swobodny_przebieg_2.mat'));
+    data = load(fullfile(dataFolder, 'wahadlo_swobodny_przebieg_1.mat'));
     t_real = data.x;
     x_real = data.y;
     x0 = [x_real(1), 0];
