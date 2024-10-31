@@ -40,4 +40,5 @@ function [I, U, g, beta] = compute_parameters()
     g = 9.8105; 
     U = (0.151 * 0.178)/sin(pi/2);
     I = (T/(2*pi))*(T/(2*pi))*U*g;
+    
 end

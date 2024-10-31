@@ -5,7 +5,7 @@ function [K, tau] = optymalizacja()
     
     % Ścieżka do folderu z danymi
     dataFolder = fullfile(scriptDir, '..', '..', 'raw_data');
-    
+
     % Załaduj dane
     data = load(fullfile(dataFolder, 'motor_raw_with_pendulum_3.mat'));
     t_real = data.motor_vel.time(3:end) - 0.02;
