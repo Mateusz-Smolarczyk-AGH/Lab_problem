@@ -23,7 +23,8 @@ function [beta, U] = optymalizacja()
     stairs(t, x(:, 1));
     legend('Real', 'Model');
     title('Model wahadła po optymalizacji');
-    
+    ylabel('Kąt [rad]');
+    xlabel('czas [s]');
     % Weryfikacja modelu na innych danych (przebieg 1)
     data = load(fullfile(dataFolder, 'wahadlo_swobodny_przebieg_1.mat'));
     t_real = data.x;
@@ -37,7 +38,8 @@ function [beta, U] = optymalizacja()
     stairs(t, x(:, 1)); hold off;
     legend('Real', 'Model');
     title('Weryfikacja modelu z innym przebiegiem');
-    
+    ylabel('Kąt [rad]');
+    xlabel('czas [s]');
     % Zwróć zoptymalizowane parametry
     beta = params(1);
     U = params(2);

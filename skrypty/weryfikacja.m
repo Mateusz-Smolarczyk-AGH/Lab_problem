@@ -1,7 +1,7 @@
 clear all; close all;
 
 cd('./kolo_zamachowe/')
-[K, tau] = optymalizacja();
+% [K, tau] = optymalizacja();
 
 cd('../wahadlo/')
 [I, U, g, beta] = compute_parameters();
@@ -15,7 +15,7 @@ load(fullfile(dataFolder, 'motor_raw_with_pendulum_4.mat'));
 t_real = motor_vel.time(3:end) - 0.02;
 x_real = pend_angle.signals.values(3:end);
 w_real = motor_vel.signals(1).values(3:end);
-u_real = motor_vel.signals(2).values(3:end);
+u_real = motor_vel.signals(2).values(3:end)/2;
 % t_real = StateData.time(3:end) - 0.02;
 % x_real = StateData.signals(3).values(3:end);
 % w_real = StateData.signals(6).values(3:end);
@@ -39,17 +39,54 @@ simOut = sim('model_testslx_2015a.slx', ...
     %% 
 x0 = [x_real(1); 0; w_real(1)];
 [t, x] = ode45(@(t, x) model(t, x, u_real(1+int16(100*t)), params), t_real, x0);
-figure('Name', 'Ostateczny model helikoptera', 'Position', [50 50 800 900]);
+figure('Name', 'Ostateczny model wahadła', 'Position', [50 50 800 900]);
 subplot(3, 1, 1)
 stairs(t_real, x_real); hold on
 stairs(t, x(:, 1));
-legend('Real', 'Model'); title('Wychylenie wahadła')
+legend('Obiekt', 'Model'); title('Wychylenie wahadła')
+ylabel('położenie [rad]');
+xlabel('czas [s]');
+
 subplot(3, 1, 2)
 stairs(t_real, w_real); hold on
 stairs(t, x(:, 3))
-legend('Real', 'Model'); title('Prędkość obrotowa wiatraka')
+legend('Obiekt', 'Model'); title('Prędkość obrotowa koła zamachowego')
+ylabel('prędkość [rad/s]');
+xlabel('czas [s]');
 subplot(3, 1, 3)
 stairs(t_real, u_real); title('Sygnał sterujący')
+legend('Sterowanie');
+ylabel('sterowanie');
+xlabel('czas [s]');
+%%
+t_liniowy = out.liniowy.time();
+x_liniowy = out.liniowy.signals(1).values;
+w_liniowy = out.liniowy.signals(3).values;
+
+figure('Name', 'Ostateczny model wahadła', 'Position', [50 50 800 900]);
+subplot(3, 1, 1)
+stairs(t_real, x_real); hold on
+stairs(t, x(:, 1), 'g', 'LineWidth', 1);
+
+stairs(t_liniowy, x_liniowy, 'r--', 'LineWidth', 1);
+legend('Obiekt', 'Model', 'Linearyzacja'); title('Wychylenie wahadła')
+ylabel('położenie [rad]');
+xlabel('czas [s]');
+
+subplot(3, 1, 2)
+stairs(t_real, w_real); hold on
+stairs(t, x(:, 3), 'g', 'LineWidth', 1)
+
+stairs(t_liniowy, w_liniowy, 'r--', 'LineWidth', 1);
+
+legend('Obiekt', 'Model', 'Linearyzacja'); title('Prędkość obrotowa koła zamachowego')
+ylabel('prędkość [rad/s]');
+xlabel('czas [s]');
+subplot(3, 1, 3)
+stairs(t_real, u_real); title('Sygnał sterujący')
+legend('Sterowanie');
+ylabel('sterowanie');
+xlabel('czas [s]');
 %% 
 % Zakładam, że dane wyjściowe są w postaci struktury 'simOut' i zawierają sygnały
 % np. jeśli mamy sygnał zapisany w To Workspace jako 'simout1', 'simout2', 'simout3', 'simout4' oraz 'control':
@@ -109,11 +146,12 @@ uep = solv(2);
 % p2 = [2.056467854285133e+02,-5.208575031241387,-1.043284835310092e+03,43.401332957404660,3.454345824430912e+03,1.802723922744937];
 % mu2 = [0;0.636602825861413];
 % %% 
+%% 
 A = [0 1 0;
-   12.34 -1.173 0.01033;
+   -12.34 -1.173 0.01033;
    0 0 -1.004];
 
- B = [0; -2.207; 214.5];
+ B = [0; -4.414; 428.9];
  C = [1 0 0;
    0 1 0 ;
    0 0 1];

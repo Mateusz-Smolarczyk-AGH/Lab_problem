@@ -10,7 +10,7 @@ function [K, tau] = optymalizacja()
     data = load(fullfile(dataFolder, 'motor_raw_with_pendulum_3.mat'));
     t_real = data.motor_vel.time(3:end) - 0.02;
     x_real = data.motor_vel.signals(1).values(3:end);
-    u = data.motor_vel.signals(2).values(3:end);
+    u = data.motor_vel.signals(2).values(3:end)/2;
     
     x0 = x_real(1);
     fprintf("Warunek początkowy: %g\n", x0);
@@ -26,12 +26,13 @@ function [K, tau] = optymalizacja()
     stairs(t, x(:, 1));
     legend('Real', 'Model');
     title('Model po optymalizacji');
-    
+    ylabel('Prędkość kątowa [rad/s]');
+    xlabel('czas [s]');
     % Weryfikacja modelu na innych danych
     data = load(fullfile(dataFolder, 'motor_raw_with_pendulum_4.mat'));
     t_real = data.motor_vel.time(3:end) - 0.02;
     x_real = data.motor_vel.signals(1).values(3:end);
-    u = data.motor_vel.signals(2).values(3:end);
+    u = data.motor_vel.signals(2).values(3:end)/2;
     x0 = x_real(1);
     
     subplot(2, 1, 2);
@@ -40,7 +41,8 @@ function [K, tau] = optymalizacja()
     stairs(t, x(:, 1));
     legend('Real', 'Model');
     title('Weryfikacja modelu z innym przebiegiem');
-
+    ylabel('Prędkość kątowa [rad/s]');
+    xlabel('czas [s]');
     % Zwróć zoptymalizowane parametry
     K = params(1);
     tau = params(2);
