@@ -16,7 +16,7 @@ Proces realizacji wykorzystał technikę **Model-Based Design** w środowisku **
 ## Struktura repozytorium
 
 - 📁 `skrypty/` – zawiera wszystkie skrypty stworzone w języku MATLAB użyte podczas realizacji projektu.
-- 📁 `doc/` – zawiera dokumentację i sprawozdanie z projektu.
+- 📁 `doc/` – zawiera sprawozdanie z projektu.
 - 📁 `projekt helikopter/` – zawiera podobny projekt wykonany dla innego obiektu (model helikoptera).
 
 ---
